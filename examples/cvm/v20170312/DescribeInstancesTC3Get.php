@@ -18,13 +18,14 @@ try {
 
     // 实例化一个http选项，可选的，没有特殊需求可以跳过
     $httpProfile = new HttpProfile();
-    $httpProfile->setReqMethod("POST");  // post请求(默认为post请求)
+    $httpProfile->setReqMethod("GET");  // post请求(默认为post请求)
     $httpProfile->setReqTimeout(30);    // 请求超时时间，单位为秒(默认60秒)
-    $httpProfile->setEndpoint("cvm.ap-shanghai.tencentcloudapi.com");  // 指定接入地域域名(默认就近接入)
+    $httpProfile->setEndpoint("cvm.tencentcloudapi.com");  // 指定接入地域域名(默认就近接入)
 
     // 实例化一个client选项，可选的，没有特殊需求可以跳过
     $clientProfile = new ClientProfile();
-    $clientProfile->setSignMethod("HmacSHA256");  // 指定签名算法(默认为HmacSHA256)
+    $clientProfile->setSignMethod("TC3-HMAC-SHA256");  // 指定签名算法(默认为HmacSHA256)
+    //$clientProfile->setUnsignedPayload(true);
     $clientProfile->setHttpProfile($httpProfile);
 
     // 实例化要请求产品(以cvm为例)的client对象,clientProfile是可选的
@@ -36,20 +37,11 @@ try {
     // 填充请求参数,这里request对象的成员变量即对应接口的入参
     // 你可以通过官网接口文档或跳转到request对象的定义处查看请求参数的定义
     $respFilter = new Filter();  // 创建Filter对象, 以zone的维度来查询cvm实例
-    $respFilter->Name = "zone";
-    $respFilter->Values = ["ap-shanghai-1", "ap-shanghai-2"];
+    $respFilter->Name = "instance-name";
+    $respFilter->Values = ["中文测试"];
     $req->Filters = [$respFilter];  // Filters 是成员为Filter对象的列表
-
-    // 这里还支持以标准json格式的string来赋值请求参数的方式。下面的代码跟上面的参数赋值是等效的
-    $params = [
-        "Filters" => [
-            [
-                "Name" => "zone",
-                "Values" => ["ap-shanghai-1", "ap-shanghai-2"]
-            ]
-        ]
-    ];
-    $req->fromJsonString(json_encode($params));
+    $req->Limit = 10;
+    $req->Offset = 0;
 
     // 通过client对象调用DescribeInstances方法发起请求。注意请求方法名与请求对象是对应的
     // 返回的resp是一个DescribeInstancesResponse类的实例，与请求对象对应
