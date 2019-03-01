@@ -1,5 +1,5 @@
 {
-    "name": "tencentcloud/tencentcloud-sdk-php",
+    "name": "zqfan/tencentcloud-sdk-php",
     "description": "TencentCloudApi php sdk",
     "type": "library",
     "homepage": "https://github.com/TencentCloud/tencentcloud-sdk-php",
@@ -23,6 +23,10 @@
         ],
         "psr-4": {
             "TencentCloud\\": "./src/TencentCloud"
-        }
+        },
+        "exclude-from-classmap": ["/vendor/"]
+    },
+    "archive": {
+        "exclude": ["vendor"]
     }
 }
